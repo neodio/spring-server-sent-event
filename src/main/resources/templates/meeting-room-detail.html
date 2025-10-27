@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${meetingRoom.name}">회의실 상세</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background: #f0f0f0;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .room-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .room-icon {
+            width: 80px;
+            height: 80px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.2;
+            padding: 5px;
+        }
+
+        .room-text {
+            flex: 1;
+        }
+
+        .campus-name {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .room-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 40px;
+            background: #e0e0e0;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .checklist-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .all-button {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .all-button:hover {
+            background: #1976D2;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .checkbox.checked {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .item-label {
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <button class="back-button" onclick="location.href='/'">
+        ← 뒤로
+    </button>
+
+    <div class="header">
+        <div class="room-info">
+            <div class="room-icon">우아한<br>형제들</div>
+            <div class="room-text">
+                <div class="campus-name">선릉 캠퍼스</div>
+                <div class="room-name" th:text="${meetingRoom.name}">회의실</div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar">0 / 4</div>
+        </div>
+    </div>
+
+    <!-- 목성 회의실 (급성 회의실) -->
+    <div class="checklist-section">
+        <div class="section-header">
+            <span class="section-title">목성 회의실</span>
+            <button class="all-button" onclick="toggleAllJupiter()">
+                ALL
+                <img src="https://via.placeholder.com/20" alt="avatar" class="avatar">
+            </button>
+        </div>
+
+        <div class="checklist-item">
+            <div class="checkbox-wrapper">
+                <div class="checkbox" id="jupiterAirConditioner"
+                     th:classappend="${meetingRoom.airConditionerOff} ? 'checked' : ''"
+                     onclick="toggleCheckbox('airConditionerOff')"></div>
+            </div>
+            <span class="item-label" onclick="toggleCheckbox('airConditionerOff')">에어컨 끄기</span>
+        </div>
+
+        <div class="checklist-item">
+            <div class="checkbox-wrapper">
+                <div class="checkbox" id="jupiterTv"
+                     th:classappend="${meetingRoom.tvOff} ? 'checked' : ''"
+                     onclick="toggleCheckbox('tvOff')"></div>
+            </div>
+            <span class="item-label" onclick="toggleCheckbox('tvOff')">TV 끄기</span>
+        </div>
+
+        <div class="checklist-item">
+            <div class="checkbox-wrapper">
+                <div class="checkbox" id="jupiterLight"
+                     th:classappend="${meetingRoom.lightOff} ? 'checked' : ''"
+                     onclick="toggleCheckbox('lightOff')"></div>
+            </div>
+            <span class="item-label" onclick="toggleCheckbox('lightOff')">불 끄기</span>
+        </div>
+
+        <div class="checklist-item">
+            <div class="checkbox-wrapper">
+                <div class="checkbox" id="jupiterTrash"
+                     th:classappend="${meetingRoom.trashCleaned} ? 'checked' : ''"
+                     onclick="toggleCheckbox('trashCleaned')"></div>
+            </div>
+            <span class="item-label" onclick="toggleCheckbox('trashCleaned')">쓰레기 정리</span>
+        </div>
+    </div>
+
+    <!-- 금성 회의실 (복사본) -->
+    <div class="checklist-section">
+        <div class="section-header">
+            <span class="section-title">금성 회의실</span>
+            <button class="all-button" onclick="toggleAllVenus()">
+                ALL
+                <img src="https://via.placeholder.com/20" alt="avatar" class="avatar">
+            </button>
+        </div>
+
+        <div class="checklist-item">
+            <div class="checkbox-wrapper">
+                <div class="checkbox" id="venusAirConditioner"></div>
+            </div>
+            <span class="item-label">에어컨 끄기</span>
+        </div>
+
+        <div class="checklist-item">
+            <div class="checkbox-wrapper">
+                <div class="checkbox" id="venusTv"></div>
+            </div>
+            <span class="item-label">TV 끄기</span>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const meetingRoomId = /*[[${meetingRoom.id}]]*/ 1;
+    let currentState = {
+        airConditionerOff: /*[[${meetingRoom.airConditionerOff}]]*/ false,
+        tvOff: /*[[${meetingRoom.tvOff}]]*/ false,
+        lightOff: /*[[${meetingRoom.lightOff}]]*/ false,
+        trashCleaned: /*[[${meetingRoom.trashCleaned}]]*/ false
+    };
+
+    // SSE 연결
+    const eventSource = new EventSource(`/api/meeting-rooms/${meetingRoomId}/subscribe`);
+
+    eventSource.addEventListener('connect', (event) => {
+        console.log('Connected:', event.data);
+    });
+
+    eventSource.addEventListener('update', (event) => {
+        const data = JSON.parse(event.data);
+        console.log('Meeting room updated:', data);
+        updateUI(data);
+    });
+
+    eventSource.onerror = (error) => {
+        console.error('SSE Error:', error);
+    };
+
+    function updateUI(data) {
+        currentState = {
+            airConditionerOff: data.airConditionerOff,
+            tvOff: data.tvOff,
+            lightOff: data.lightOff,
+            trashCleaned: data.trashCleaned
+        };
+
+        // 체크박스 UI 업데이트
+        updateCheckboxUI('jupiterAirConditioner', data.airConditionerOff);
+        updateCheckboxUI('jupiterTv', data.tvOff);
+        updateCheckboxUI('jupiterLight', data.lightOff);
+        updateCheckboxUI('jupiterTrash', data.trashCleaned);
+
+        // 진행률 업데이트
+        updateProgress();
+    }
+
+    function updateCheckboxUI(id, checked) {
+        const element = document.getElementById(id);
+        if (checked) {
+            element.classList.add('checked');
+        } else {
+            element.classList.remove('checked');
+        }
+    }
+
+    function updateProgress() {
+        const total = 4;
+        const completed = Object.values(currentState).filter(v => v === true).length;
+        const percentage = (completed / total) * 100;
+
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = percentage + '%';
+        progressBar.textContent = completed + ' / ' + total;
+    }
+
+    async function toggleCheckbox(field) {
+        const newValue = !currentState[field];
+
+        try {
+            const response = await fetch(`/api/meeting-rooms/${meetingRoomId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    [field]: newValue
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('업데이트 실패');
+            }
+
+            // SSE를 통해 자동으로 업데이트됨
+        } catch (error) {
+            console.error('Error:', error);
+            alert('업데이트 중 오류가 발생했습니다.');
+        }
+    }
+
+    async function toggleAllJupiter() {
+        const allChecked = Object.values(currentState).every(v => v === true);
+        const newValue = !allChecked;
+
+        try {
+            const response = await fetch(`/api/meeting-rooms/${meetingRoomId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    airConditionerOff: newValue,
+                    tvOff: newValue,
+                    lightOff: newValue,
+                    trashCleaned: newValue
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('업데이트 실패');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('업데이트 중 오류가 발생했습니다.');
+        }
+    }
+
+    function toggleAllVenus() {
+        // 금성 회의실 토글 (현재는 UI만)
+        const venusCheckboxes = ['venusAirConditioner', 'venusTv'];
+        const allChecked = venusCheckboxes.every(id =>
+            document.getElementById(id).classList.contains('checked')
+        );
+
+        venusCheckboxes.forEach(id => {
+            const element = document.getElementById(id);
+            if (allChecked) {
+                element.classList.remove('checked');
+            } else {
+                element.classList.add('element');
+            }
+        });
+    }
+
+    // 페이지 로드 시 초기 진행률 설정
+    window.addEventListener('DOMContentLoaded', () => {
+        updateProgress();
+    });
