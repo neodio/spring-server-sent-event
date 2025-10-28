@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class MeetingRoomViewController {
     /**
      * 전체 회의실 목록 페이지
      */
-    @GetMapping({"", "/"})
+    @GetMapping("/")
     public String index(Model model) {
         List<MeetingRoomResponse> meetingRooms = meetingRoomService.getAllMeetingRooms();
         model.addAttribute("meetingRooms", meetingRooms);
