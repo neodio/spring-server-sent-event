@@ -25,7 +25,7 @@ POST /api/meeting-rooms
 Content-Type: application/json
 
 {
-  "name": "목성 회의실"
+  "name": "미팅룸1"
 }
 ```
 
@@ -33,7 +33,7 @@ Content-Type: application/json
 ```json
 {
   "id": 1,
-  "name": "목성 회의실",
+  "name": "미팅룸1",
   "airConditionerOff": false,
   "tvOff": false,
   "lightOff": false,
@@ -51,7 +51,7 @@ GET /api/meeting-rooms
 [
   {
     "id": 1,
-    "name": "목성 회의실",
+    "name": "미팅룸1",
     "airConditionerOff": false,
     "tvOff": false,
     "lightOff": false,
@@ -69,7 +69,7 @@ GET /api/meeting-rooms/{id}
 ```json
 {
   "id": 1,
-  "name": "목성 회의실",
+  "name": "미팅룸1",
   "airConditionerOff": false,
   "tvOff": false,
   "lightOff": false,
@@ -94,7 +94,7 @@ Content-Type: application/json
 ```json
 {
   "id": 1,
-  "name": "목성 회의실",
+  "name": "미팅룸1",
   "airConditionerOff": true,
   "tvOff": true,
   "lightOff": false,
@@ -121,7 +121,7 @@ data: Connected to meeting room 1
 2. **업데이트 이벤트 (update)**
 ```
 event: update
-data: {"id":1,"name":"목성 회의실","airConditionerOff":true,"tvOff":true,"lightOff":false,"trashCleaned":false}
+data: {"id":1,"name":"미팅룸1","airConditionerOff":true,"tvOff":true,"lightOff":false,"trashCleaned":false}
 ```
 
 ## 💡 SSE 클라이언트 예제
@@ -207,7 +207,7 @@ src/main/java/com/example/sse/
    # 회의실 생성
    curl -X POST http://localhost:8080/api/meeting-rooms \
      -H "Content-Type: application/json" \
-     -d '{"name": "마라 회의실"}'
+     -d '{"name": "미팅룸4"}'
    
    # 전체 조회
    curl http://localhost:8080/api/meeting-rooms
