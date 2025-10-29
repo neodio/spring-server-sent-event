@@ -16,7 +16,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // 샘플 회의실 데이터 생성
         MeetingRoom room1 = MeetingRoom.builder()
-                .name("마라")
+                .name("미팅룸1")
                 .airConditionerOff(false)
                 .tvOff(false)
                 .lightOff(false)
@@ -24,7 +24,7 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
 
         MeetingRoom room2 = MeetingRoom.builder()
-                .name("목성 회의실")
+                .name("미팅룸2")
                 .airConditionerOff(false)
                 .tvOff(false)
                 .lightOff(false)
@@ -32,7 +32,7 @@ public class DataInitializer implements CommandLineRunner {
                 .build();
 
         MeetingRoom room3 = MeetingRoom.builder()
-                .name("금성 회의실")
+                .name("미팅룸3")
                 .airConditionerOff(false)
                 .tvOff(false)
                 .lightOff(false)
